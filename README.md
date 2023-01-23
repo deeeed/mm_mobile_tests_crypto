@@ -36,7 +36,8 @@
 npx react-native init test4
 cd test4
 yarn add rn-nodeify react-native-randombytes react-native-crypto
-yarn rn-nodeify --hack --install
+## as soon as you run rn-nodeify the project will not build on android
+yarn rn-nodeify --hack --install --yarn
 # on terminal1:
 yarn start
 # on terminal2:
