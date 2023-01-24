@@ -4,6 +4,7 @@
  *
  * @format
  */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import React, {useEffect, useState} from 'react';
 import {
@@ -31,6 +32,7 @@ import {encrypt} from 'eciesjs';
 import BackgroundTimer from 'react-native-background-timer';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {DAPPView} from './src/views/DappView';
+import {StorageManagerRN} from './src/StorageManagerRN';
 const remotServerUrl = 'https://5488-1-36-226-145.ap.ngrok.io';
 
 function App(): JSX.Element {
@@ -51,6 +53,10 @@ function App(): JSX.Element {
         timer: BackgroundTimer,
         enableDebug: true,
         dappMetadata: dappMetadata,
+        storage: {
+          debug: true,
+          // storageManager: new StorageManagerRN({debug: true}),
+        },
         ecies: {
           enabled: true,
         },
@@ -88,6 +94,18 @@ function App(): JSX.Element {
     console.debug('encrypted: ', encryptedString);
   };
 
+  const testStorage = async () => {
+    // const allKeys = await AsyncStorage.getAllKeys();
+    // console.debug('allKeys', allKeys);
+    // await AsyncStorage.setItem('temp', 'test', () => {
+    //   console.debug(
+    //     'StorageManagerRN::persisChannelConfig() saved to storage.',
+    //   );
+    // });
+    const isHermes = () => !!global.HermesInternal;
+    console.log("Is Hermes enabled " + isHermes())
+  };
+
   const removeSdk = (sdk: MetaMaskSDK, index: number) => {
     const newList = [...sdkList];
     newList.splice(index, 1);
@@ -114,10 +132,9 @@ function App(): JSX.Element {
             backgroundColor: Colors.white,
           }}>
           <Text style={{color: Colors.black, fontSize: 24}}>
-            TEST1 Mobile Dapp Test (RN v0.71.1) df
+            TEST1 Mobile Dapp Test (RN v0.71.1)
           </Text>
           <Button
-          //sdfasdf
             title="Remote Connection"
             onPress={() => {
               const url = new URL(
@@ -171,6 +188,7 @@ function App(): JSX.Element {
             }}
           />
           <Button title="TestEncrypt" onPress={testEncrypt} />
+          <Button title="Test Storage" onPress={testStorage} />
           <Button
             title="New SDK"
             onPress={() => {
@@ -188,8 +206,7 @@ function App(): JSX.Element {
               onTerminate={terminate => {
                 console.debug(`onTerminate terminate=${terminate}`);
                 if (terminate) {
-                  // sdk.terminate();
-                  sdk.debugPersistence({terminate: true});
+                  sdk.terminate();
                 }
                 removeSdk(sdk, index);
               }}

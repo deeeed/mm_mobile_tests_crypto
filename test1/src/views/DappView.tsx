@@ -78,48 +78,52 @@ export const DAPPView = ({sdk, onTerminate}: DAPPViewProps) => {
   };
 
   useEffect(() => {
-    const _ethereum = sdk.getProvider();
-    const _provider = new ethers.providers.Web3Provider(_ethereum);
+    try {
+      const _ethereum = sdk.getProvider();
+      const _provider = new ethers.providers.Web3Provider(_ethereum);
 
-    setEthereum(_ethereum);
-    setProvider(_provider);
+      setEthereum(_ethereum);
+      setProvider(_provider);
 
-    _ethereum.on('chainChanged', (newChain: number) => {
-      console.log('chainChanged event', newChain);
-      _setConnected(true);
-      _setChain(newChain);
-    });
+      _ethereum.on('chainChanged', (newChain: number) => {
+        console.log('chainChanged event', newChain);
+        _setConnected(true);
+        _setChain(newChain);
+      });
 
-    _ethereum.on('_initialized', () => {
-      console.log('_initialized event');
-      _setConnected(true);
-    });
+      _ethereum.on('_initialized', () => {
+        console.log('_initialized event');
+        _setConnected(true);
+      });
 
-    _ethereum.on('connect', ({chainId}: {chainId: string}) => {
-      console.debug('connect event', chainId);
-      _setConnected(true);
-      _setChain(parseInt(chainId, 10));
-    });
+      _ethereum.on('connect', ({chainId}: {chainId: string}) => {
+        console.debug('connect event', chainId);
+        _setConnected(true);
+        _setChain(parseInt(chainId, 10));
+      });
 
-    _ethereum.on('accountsChanged', (newAccounts: string[]) => {
-      console.log('accountsChanged changed', newAccounts);
-      _setAccount(newAccounts?.[0]);
-      _setConnected(true);
-      getBalance();
-    });
+      _ethereum.on('accountsChanged', (newAccounts: string[]) => {
+        console.log('accountsChanged changed', newAccounts);
+        _setAccount(newAccounts?.[0]);
+        _setConnected(true);
+        getBalance();
+      });
 
-    _ethereum.on('disconnect', (error: unknown) => {
-      console.log('disconnect event', error);
-      _setConnected(false);
-    });
+      _ethereum.on('disconnect', (error: unknown) => {
+        console.log('disconnect event', error);
+        _setConnected(false);
+      });
 
-    sdk.on(
-      MessageType.CONNECTION_STATUS,
-      (_connectionStatus: ConnectionStatus) => {
-        setConnectionStatus(_connectionStatus);
-        setChannelConfig(sdk.getChannelConfig());
-      },
-    );
+      sdk.on(
+        MessageType.CONNECTION_STATUS,
+        (_connectionStatus: ConnectionStatus) => {
+          setConnectionStatus(_connectionStatus);
+          setChannelConfig(sdk.getChannelConfig());
+        },
+      );
+    } catch (err) {
+      console.log('strange errror', err);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -270,6 +274,12 @@ export const DAPPView = ({sdk, onTerminate}: DAPPViewProps) => {
       <Text>Status: {status}</Text>
       <Text>Channel: {channelConfig?.channelId}</Text>
       <Text>{`Expiration: ${channelConfig?.validUntil ?? ''}`}</Text>
+      <Button
+        title={'Test Storage'}
+        onPress={() => {
+          sdk.testStorage();
+        }}
+      />
       <Button title={connected ? 'Connected' : 'Connect'} onPress={connect} />
       {connected && (
         <>
@@ -305,6 +315,7 @@ export const DAPPView = ({sdk, onTerminate}: DAPPViewProps) => {
           <TouchableOpacity
             style={[styles.button, styles.removeButton]}
             onPress={() => {
+              console.debug('start disconnect on app');
               sdk.disconnect();
             }}>
             <Text style={styles.buttonText}>Disconnect</Text>
