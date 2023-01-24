@@ -7,3 +7,4 @@ cp -rf /Users/arthurbreton/Projects/metamask/metamask-sdk/packages/sdk node_modu
 # yarn add file:/Users/arthurbreton/Projects/metamask/metamask-sdk/packages/sdk
 # yarn wml add /Users/arthurbreton/Projects/metamask/metamask-sdk/packages/sdk-communication-layer node_modules/@metamask/sdk-communication-layer
 # yarn wml start
+yarn rn-nodeify --hack --install --yarn   
