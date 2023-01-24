@@ -31,7 +31,7 @@ import {encrypt} from 'eciesjs';
 import BackgroundTimer from 'react-native-background-timer';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {DAPPView} from './src/views/DappView';
-const remotServerUrl = 'https://af75-1-36-226-145.ap.ngrok.io';
+const remotServerUrl = 'https://5488-1-36-226-145.ap.ngrok.io';
 
 function App(): JSX.Element {
   const [sdkList, setSDKList] = useState<MetaMaskSDK[]>([]);
@@ -113,7 +113,7 @@ function App(): JSX.Element {
             backgroundColor: Colors.white,
           }}>
           <Text style={{color: Colors.black, fontSize: 24}}>
-            Mobile Dapp Test (RN v0.67.4)
+            TEST3 Mobile Dapp Test (RN v0.67.4)
           </Text>
           <Button
             title="Remote Connection"
